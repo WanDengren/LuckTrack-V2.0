@@ -22,7 +22,7 @@ class Welcome extends CI_Controller {
     }
 
 	public function index()
-	{/*
+	{
 		//从POST过来的signed_request中提取oauth2信息
 		if(!empty($_REQUEST["signed_request"])){
 			$o = new $this->Saetoauthv2();
@@ -51,14 +51,17 @@ class Welcome extends CI_Controller {
 		} 
 
 		$data['oauth2'] = $oauth2;
-		*/
-		$data=FALSE;
-		$this->load->view('home', $data);
+
+		$this->load->view('home');
 	}
 
 	public function user(){
-		$oauth2 = $this->session->userdata('oauth2');
-		echo $this->Saeapi->place_user_timeline($oauth2['user_id'], 50, NULL);
+		$data = json_decode($this->input->post('data'));
+		if($data == NULL){
+			$oauth2 = $this->session->userdata('oauth2');
+			$usr_feed = $this->Saeapi->place_user_timeline($oauth2['user_id'], 50, NULL);
+			echo $usr_feed;
+		}
 	}
 
 	public function nearby(){

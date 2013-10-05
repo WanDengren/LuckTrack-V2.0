@@ -1,0 +1,60 @@
+.status-item{
+	margin-bottom: 5px;
+	border-bottom: 1px solid #f6f6f6;
+	padding: 5px;
+}
+.head{
+	float: left;
+	position: relative;
+	padding-top: 18px;
+	padding-bottom: 18px;
+}
+.body{
+	overflow: hidden;
+	margin-left: 70px;
+	background-color: #F2F2F2;
+	border-radius: 10px;
+	padding: 5px;
+	margin-bottom: 5px;	
+}
+a.name{
+	word-wrap: break-word;
+	color: #26A2DA;
+	text-decoration: none;
+}
+.text{
+	line-height: 1.5;
+}
+.actions{
+	color: #A0A0A0;
+	font: normal 12px/1.5 Helvetica, Microsoft YaHei, sans-serif;
+}
+span.info a, span.operation a{
+	margin-left: 10px;
+}
+span.info a{
+	color: #A0A0A0;
+	font: normal 12px/1.5 Helvetica, Microsoft YaHei, sans-serif;
+	text-decoration: none;
+}
+span.info a:hover{
+	text-decoration: underline;
+}
+span.operation{
+	float: right;
+	margin-right: 20px;	
+}
+span.operation a.comment{
+	color: #6c6351;
+	font: normal 12px/1.5 Helvetica, Microsoft YaHei, sans-serif;
+}
+span.operation a.yuanfen{
+	color: #ff1a66;
+	font: normal 12px/1.5 Helvetica, Microsoft YaHei, sans-serif;
+}
+.attach{
+	margin: 10px;
+}
+.attach a{
+	margin-left: 20px;
+}

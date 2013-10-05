@@ -6,6 +6,9 @@ class Saeapi extends CI_Model{
 
 	function __construct(){
 		parent::__construct();
+		$oauth2 = $this->session->userdata('oauth2');
+		$this->access_token = $oauth2['oauth_token'];
+		$this->user_id = $oauth2['user_id'];
 	}
 
 	function place_user_timeline($uid = NULL, $count = 50, $page = NULL)
@@ -29,7 +32,7 @@ class Saeapi extends CI_Model{
 		$getjson =$getjson .  '&access_token=' . $this->access_token;
 		
 		$ch = curl_init();  
-		curl_setopt($ch, CURLOPT_URL,$getjson);  
+		curl_setopt($ch, CURLOPT_URL,$getjson);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);  
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);  
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);  

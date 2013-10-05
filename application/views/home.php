@@ -7,7 +7,6 @@
 <link rel="stylesheet" href="<?php echo base_url("static/stylesheet/css/weibo.css");?>" />
 <script type="text/javascript" src="<?php echo base_url('static/js/jquery-1.7.2.min.js');?>"></script>
 <script src="http://tjs.sjs.sinajs.cn/t35/apps/opent/js/frames/client.js" language="JavaScript"></script>
-<script type="text/javascript" src="<?php echo base_url('static/js/slide.js');?>"></script>
 </head>
 <body>
 	<div id="gallery">
@@ -32,44 +31,34 @@
 		</div>	
 	    <div id="slides">
 			<div class="slide-lef">	
-				<div class="map_canvas_lef">
+				<div id="map_canvas_lef">
 				</div>
-				<div class="feed">
+				<div class="feed_lef">
 					<a href="javascript:void(0);" class="lef">附近的人</a>
 				</div>
 			</div>
 			<div class="slide-mid">		
-				<div class="map_canvas_mid">
+				<div id="map_canvas_mid">
 				</div>
-			    <div class="feed">
-					<a href="javascript:void(0);" class="mid">首页</a>
+			    <div class="feed_mid">
 			    </div>
 		    </div>
 			<div class="slide-rig">				
-				<div class="map_canvas_rig">
+				<div id="map_canvas_rig">
 				</div>
-			    <div class="feed">
+			    <div class="feed_rig">
 					<a href="javascript:void(0);" class="rig">TA的轨迹</a>
 			    </div>
 		    </div>		    
 	    </div>
 	</div>
-<script type="text/javascript">
-$(function() {
-	function map_feed(str){
-	    $.ajax({
-	        url: '<?php echo base_url("welcome/user");?>',
-	        type: 'post',
-	        data: {data: str},
-	        success: function(msg) {
-
-	        },
-	        error: function(msg) {
-	            console.log('msg: ' + msg.responseText);
-	        }
-	    });
-	}
-});
-</script>	
+	<script type="text/javascript" src="<?php echo base_url('static/js/slide.js');?>"></script>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=1.5&ak=155eb38626b5e12d561173a13788f46f"></script>
+	<script type="text/javascript" src="<?php echo base_url('static/js/feed.js');?>"></script>
+	<script type="text/javascript">
+	$(function() {
+		getdata("<?php echo base_url('welcome/user');?>", null);
+	});
+	</script>
 </body>
 </html>
