@@ -1,18 +1,87 @@
-function getdata(url, str){
+function getdata(url, str, type){
+	if(type == 'mid'){
+		$('div.feed_mid').html(pImg);
+	}else if(type == 'rig'){
+		$('div.friends').html(pImg);
+	}
+
     $.ajax({
         url: url,
         type: 'post',
         data: {data: str},
         success: function(msg) {
+        	//console.log(msg);
         	var data = JSON.parse(msg);
-        	
-        	flushUsr(data);
+
+        	if(type == 'mid'){
+	        	total_number_mid = data.total_number;
+
+	        	$('div.process').remove();
+	        	flushUsr(data);
+        	}else if(type == 'rig'){
+        		flushFriends(data);
+        	}
         },
         error: function(msg) {
             console.log('msg: ' + msg.responseText);
         }
     });
 }
+
+function flushUsr(data){
+	if(data.statuses == undefined){
+		$('.feed_mid').append("<div class='error'>没有您的签到信息！</div>");
+		return;
+	}
+
+	var  statuses = data.statuses;
+	console.log(statuses);
+	var i = 0;
+	var pre_cor;
+
+	map_mid = initmap(statuses[0]['geo']['coordinates']);
+
+	for(; i < statuses.length; i++){
+		var item = statuses[i];
+		var str = weibo_item(item);
+		
+		$('.feed_mid').append(str);
+
+		addmarker(map_mid, item['geo']['coordinates'], str);
+
+		if(i > 0){
+			addline(map_mid, item['geo']['coordinates'], pre_cor);
+		}
+
+		pre_cor = item['geo']['coordinates'];
+	}
+
+	var more_feed = '<div class="more-feed">'+'<span class="more-feed">下一页</span>'+'</div>';
+	var no_more_feed = '<div class="no-more-feed">'+'<span>没有下一页了o(╯□╰)o</span>'+'</div>';
+
+	if(page_mid * per_page < total_number_mid){
+		page_mid++;
+
+		$('.feed_mid').prepend(more_feed);
+
+		$('div.more-feed, span.more-feed').bind('click', function() {
+			console.log("more");
+			if(page_mid != -1){
+				var data = {};
+				data['page'] = page_mid;
+				data['count'] = per_page;
+				
+				getdata(url_place_usr, JSON.stringify(data), 'mid');
+			}else{
+				alert("没有下一页了");
+			}
+		});
+	}else{
+		$('.feed_mid').prepend(no_more_feed);
+		page_mid = -1;
+	}
+}
+
 
 function weibo_item(item){
 	str = "";
@@ -57,111 +126,3 @@ function weibo_item(item){
 
 	return str;
 }
-
-function flushUsr(data){
-	var  statuses = data.statuses;
-	console.log(statuses);
-	var i = 0;
-
-	initmap(statuses[0]['geo']['coordinates']);
-
-	for(; i < statuses.length; i++){
-		var item = statuses[i];
-		var str = weibo_item(item);
-		
-		$('.feed_mid').append(str);
-		addmarker(item['geo']['coordinates'], str, i);
-	}
-}
-
-var map_mid;
-function initmap(coordinates){
-	var map = new BMap.Map("map_canvas_mid");          // 创建地图实例  
-	var point = new BMap.Point(coordinates[1], coordinates[0]);  // 创建点坐标  
-	map.centerAndZoom(point, 15);                 // 初始化地图，设置中心点坐标和地图级别  
-	map.enableScrollWheelZoom();                            //启用滚轮放大缩小
-	map_mid = map;
-}
-
-
-function addmarker(coordinates, str, i){
-	var point = new BMap.Point(coordinates[1], coordinates[0]);
-	var marker = new BMap.Marker(point);
-	var infoWindow = new BMap.InfoWindow(str);  // 创建信息窗口对象
-	map_mid.addOverlay(marker);
-	marker.addEventListener("click", function(){          
-	   this.openInfoWindow(infoWindow);
-	   //图片加载完毕重绘infowindow
-	   document.getElementById('imgDemo').onload = function (){
-	       infoWindow.redraw();   //防止在网速较慢，图片未加载时，生成的信息框高度比图片的总高度小，导致图片部分被隐藏
-	   }
-	});
-}
-/*
-var map_mid;
-var infowindow = new Array();
-
-function pushinfo(str){
-	var infowindow_tmp = new google.maps.InfoWindow({
-		content: str,
-		maxWidth: 500
-	});
-	infowindow.push(infowindow_tmp);
-}
-
-function initmap(coordinates){
-    var myLatlng = new google.maps.LatLng(coordinates[0], coordinates[1]);
-    var mapOptions = {
-      zoom: 4,
-      center: myLatlng,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
-    }
-
-    map_mid = new google.maps.Map(document.getElementById('map_canvas_mid'), mapOptions);
-}
-
-function addmaker(item, str, i){
-	var addMapper = function(element,index){
-		google.maps.event.addListener(element, 'click', function() {
-			infowindow[index].open(map, element);
-		});
-	}
-
-	pushinfo(str);
-
-	var newLatlng = new google.maps.LatLng(item['geo'][0], item['geo'][1]);
-	var loc = item['geo'][0] + ',' + item['geo'][1];
-	var marker = new google.maps.Marker({
-		position: newLatlng,
-		map: map_mid,
-		title: loc,
-		index:i
-	});
-
-	addMapper(marker, i);
-/*
-	var lineSymbol = {
-	      path: google.maps.SymbolPath.CIRCLE,
-	      scale: 8,
-	      strokeColor: '#393'
-    };
-
-		if(i > 0)
-		{
-			    lineCoordinates[i-1] = [
-				new google.maps.LatLng(lat[i], lng[i]),
-				new google.maps.LatLng(lat[i-1], lng[i-1])
-			];
-
-			  line[i-1] = new google.maps.Polyline({
-			  path: lineCoordinates[i-1],
-			  icons: [{
-				icon: lineSymbol,
-				offset: '100%'
-			  }],
-			  map: map
-			});
-		}
-	
-}
-*/

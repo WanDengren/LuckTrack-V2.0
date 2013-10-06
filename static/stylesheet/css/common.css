@@ -8,7 +8,7 @@
 	color: #666;	
 }
 #slides{
-	margin-left: -760px;
+	margin-left: -1520px;
 	height: 610px;
 	overflow: hidden;
 	width: 2280px;
@@ -74,4 +74,16 @@ img.arrow-left{
 img.arrow-right{
 	float: right;
 	margin-right: 20px;
+}
+.friends{
+	height: 56%;
+	overflow: scroll-y;	
+	border-top: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+	box-shadow: 0 1px 0 #f2f4f5;	
+	border-radius: 10px;	
+}
+.error{
+	text-align: center;
+	color: #ff1a66;
 }

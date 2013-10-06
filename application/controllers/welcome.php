@@ -56,12 +56,28 @@ class Welcome extends CI_Controller {
 	}
 
 	public function user(){
-		$data = json_decode($this->input->post('data'));
-		if($data == NULL){
-			$oauth2 = $this->session->userdata('oauth2');
-			$usr_feed = $this->Saeapi->place_user_timeline($oauth2['user_id'], 50, NULL);
-			echo $usr_feed;
+		$data = json_decode($this->input->post('data'), TRUE);
+
+		$oauth2 = $this->session->userdata('oauth2');
+		$usr_feed = $this->Saeapi->place_user_timeline($oauth2['user_id'], $data['count'], $data['page']);
+		echo $usr_feed;
+	}
+
+	public function friends(){
+		$count = json_decode($this->input->post('data'), TRUE);
+
+		$oauth2 = $this->session->userdata('oauth2');
+		$friends = $this->Saeapi->friendships_fridens($oauth2['user_id'], $count);
+
+		$friends = json_decode($friends, TRUE);
+		$friends['users'] = array();
+
+		foreach ($friends['ids'] as $item) {
+			$info = $this->Saeapi->users_show($item);
+			array_push($friends['users'], json_decode($info, TRUE));
 		}
+
+		echo json_encode($friends);
 	}
 
 	public function nearby(){

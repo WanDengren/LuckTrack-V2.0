@@ -58,3 +58,79 @@ span.operation a.yuanfen{
 .attach a{
 	margin-left: 20px;
 }
+div.process{
+	display: block;
+}
+img.process{
+	margin: auto;
+	display: block;
+}
+div.more-feed, div.no-more-feed{
+	padding: 10px;
+	text-align: center;
+	font-size: 14px;
+	border: 1px solid #cee1ee;
+	background-color: #f0f5f8;
+	height: 14px;
+	width: 95%;
+	display: block;
+	margin: auto;
+	font-weight: bold;	
+	cursor: pointer;
+}
+div.more-feed:hover{
+	background-color: #c8d2e2;
+}
+h2{
+	font: 15px Arial,Helvetica,sans-serif;
+	color: #072;
+	margin: 5px 5px 12px 5px;
+	line-height: 150%;
+}
+.list{
+	display: inline-block;
+	overflow: hidden;
+}
+.list-item{
+	float: left;
+	margin-left: 15px;
+	/*border: 1px solid #ddd;
+	box-shadow: 0 1px 0 #f2f4f5;*/
+	margin-bottom: 15px;
+	width: 80px;
+	height: 80px;
+	overflow: hidden;
+	text-align: center;
+}
+#next-page{
+	font: normal 12px/1.5 Helvetica, Microsoft YaHei, sans-serif;
+	color: #666;
+	margin-left: 10px;
+}
+a.next-page{
+	font-size: 16px;
+	border: 1px solid #eee;
+	padding: 2px 5px;
+	color: #036cb4;
+	text-decoration: none;
+	margin-right: 4px;
+}
+a.next-page:hover{
+	background-color: #ddd;
+}
+img.usr-img{
+	display: block;
+	margin: auto;
+}
+img.usr-img:hover{
+	border: 1px solid #ff1a66;
+}
+.list-item a{
+	color: #A0A0A0;
+	text-decoration: none;
+	cursor: pointer;
+	font: normal 12px/1.5 Helvetica, Microsoft YaHei, sans-serif;	
+}
+.list-item a:hover{
+	text-decoration: underline;
+}

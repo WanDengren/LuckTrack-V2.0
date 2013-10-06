@@ -34,16 +34,20 @@
 				<div id="map_canvas_lef">
 				</div>
 				<div class="feed_lef">
-					<a href="javascript:void(0);" class="lef">附近的人</a>
+					<div class='error'>
+						请点击“我的轨迹”页中“缘分轨迹”查看相应位置附近的人！
+					</div>
 				</div>
 			</div>
 			<div class="slide-mid">		
 				<div id="map_canvas_mid">
 				</div>
-			    <div class="feed_mid">
+			    <div class="feed_mid">			    
 			    </div>
 		    </div>
-			<div class="slide-rig">				
+			<div class="slide-rig">
+				<div class="friends">
+				</div>
 				<div id="map_canvas_rig">
 				</div>
 			    <div class="feed_rig">
@@ -53,11 +57,33 @@
 	    </div>
 	</div>
 	<script type="text/javascript" src="<?php echo base_url('static/js/slide.js');?>"></script>
-	<script type="text/javascript" src="http://api.map.baidu.com/api?v=1.5&ak=155eb38626b5e12d561173a13788f46f"></script>
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyA_XsYXNKzF7lw5GBnVt0GfR4PUwcyCaJQ&sensor=true">></script>
+	<script type="text/javascript">
+	var process = "<?php echo base_url('static/stylesheet/img/process.gif');?>";
+	var pImg = '<div class="process">' +
+					'<img class="process" src="' + process + '" />' +
+				'</div>';
+	var page_mid = 1;
+	var per_page = 10;
+	var total_number_mid = 0;
+	var url_place_usr = "<?php echo base_url('welcome/user');?>";
+	var url_friends = "<?php echo base_url('welcome/friends');?>";
+	var total_friends = 0;
+	var friends_per_page = 24;
+	var cur_friends_page = 1;
+
+	</script>
+	<script type="text/javascript" src="<?php echo base_url('static/js/map.js');?>"></script>
 	<script type="text/javascript" src="<?php echo base_url('static/js/feed.js');?>"></script>
+	<script type="text/javascript" src="<?php echo base_url('static/js/friends.js');?>"></script>
 	<script type="text/javascript">
 	$(function() {
-		getdata("<?php echo base_url('welcome/user');?>", null);
+		var data = {};
+		data['page'] = page_mid;
+		data['count'] = per_page;
+
+		getdata(url_place_usr, JSON.stringify(data), 'mid');
+		friends();
 	});
 	</script>
 </body>
