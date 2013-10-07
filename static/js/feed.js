@@ -1,8 +1,12 @@
 function getdata(url, str, type){
 	if(type == 'mid'){
 		$('div.feed_mid').html(pImg);
+	}else if(type == 'friends'){
+		$('div.friend-list').prepend(pImg);
 	}else if(type == 'rig'){
-		$('div.friends').html(pImg);
+		$('div.feed_rig').prepend(pImg);
+	}else if(type == 'lef'){
+		$('div.feed_lef').prepend(pImg);
 	}
 
     $.ajax({
@@ -13,12 +17,9 @@ function getdata(url, str, type){
         	//console.log(msg);
         	var data = JSON.parse(msg);
 
-        	if(type == 'mid'){
-	        	total_number_mid = data.total_number;
-
-	        	$('div.process').remove();
-	        	flushUsr(data);
-        	}else if(type == 'rig'){
+        	if(type == 'lef' || type == 'mid' || type == 'rig'){
+	        	flushUsr(data, type);
+        	}else if(type == 'friends'){
         		flushFriends(data);
         	}
         },
@@ -28,57 +29,96 @@ function getdata(url, str, type){
     });
 }
 
-function flushUsr(data){
+function flushUsr(data, type){
+	var selector;
+	if(type == 'mid'){
+		selector = $('div.feed_mid');
+	}else if(type == 'rig'){
+		selector = $('div.feed_rig')
+	}else if(type == 'lef'){
+		selector = $('div.feed_lef');
+	}
+	
 	if(data.statuses == undefined){
-		$('.feed_mid').append("<div class='error'>没有您的签到信息！</div>");
+		selector.empty();
+		if(data.error_code == 10023){
+			selector.append("<div class='error'>您今日使用新浪api服务已到达上限，请一小时后再试！</div>");
+		}else{
+			selector.append("<div class='error'>没有用户的签到信息！</div>");
+		}
 		return;
 	}
+
+	pageParm[type]['total'] = data.total_number;
+	selector.empty();
 
 	var  statuses = data.statuses;
 	console.log(statuses);
 	var i = 0;
 	var pre_cor;
 
-	map_mid = initmap(statuses[0]['geo']['coordinates']);
+	if (statuses[0]['geo'] == null) {
+		selector.empty();
+		selector.append("<div class='error'>没有用户的签到信息！</div>");
+		return;
+	}
+
+	var map = initmap(statuses[0]['geo']['coordinates'], type);
+	var uid = statuses[0]['user']['id'];
 
 	for(; i < statuses.length; i++){
 		var item = statuses[i];
 		var str = weibo_item(item);
-		
-		$('.feed_mid').append(str);
 
-		addmarker(map_mid, item['geo']['coordinates'], str);
+		selector.append(str);
 
-		if(i > 0){
-			addline(map_mid, item['geo']['coordinates'], pre_cor);
+		var yuanfen = selector.children('div.status-item:last').find('a.yuanfen');
+		yuanfen.bind('click', function() {
+			data = {};
+			data['lat'] = $(this).attr('lat');
+			data['long'] = $(this).attr('long');
+			console.log(data);
+			slide_lef();
+			$('div.feed_lef').empty();
+			getdata(urlParam['place_nearby'], JSON.stringify(data), 'lef');
+		});
+
+		addmarker(map, item['geo']['coordinates'], str);
+
+		if(i > 0 && type != "lef"){
+			addline(map, item['geo']['coordinates'], pre_cor);
 		}
 
 		pre_cor = item['geo']['coordinates'];
 	}
 
-	var more_feed = '<div class="more-feed">'+'<span class="more-feed">下一页</span>'+'</div>';
+	if(type == 'lef'){
+		return;
+	}
+
+	var more_feed = '<div class="more-feed" uid="'+uid+'">'+'<span class="more-feed">下一页</span>'+'</div>';
 	var no_more_feed = '<div class="no-more-feed">'+'<span>没有下一页了o(╯□╰)o</span>'+'</div>';
 
-	if(page_mid * per_page < total_number_mid){
-		page_mid++;
+	if(pageParm[type]['page'] * pageParm[type]['per_page'] < data.total_number){
+		pageParm[type]['page']++;
 
-		$('.feed_mid').prepend(more_feed);
+		selector.prepend(more_feed);
 
-		$('div.more-feed, span.more-feed').bind('click', function() {
-			console.log("more");
-			if(page_mid != -1){
+		$('div.more-feed').bind('click', function() {
+			if(pageParm[type]['page'] != -1){
 				var data = {};
-				data['page'] = page_mid;
-				data['count'] = per_page;
-				
-				getdata(url_place_usr, JSON.stringify(data), 'mid');
+				data['uid'] = parseInt($(this).attr('uid'));
+				data['page'] = pageParm[type]['page'];
+				data['count'] = pageParm[type]['per_page'];
+				console.log(data);
+				getdata(urlParam['place_usr'], JSON.stringify(data), type);
 			}else{
 				alert("没有下一页了");
 			}
 		});
 	}else{
-		$('.feed_mid').prepend(no_more_feed);
-		page_mid = -1;
+		selector.prepend(no_more_feed);
+		pageParm[type]['page'] = -1;
 	}
 }
 
@@ -118,7 +158,7 @@ function weibo_item(item){
 					'</span>' +
 					'<span class="operation">' +
 						'<a class="comment" href="http://api.weibo.com/2/statuses/go?uid='+ item['user']['id']+  '&id='+item['id']+'" target="_blank">评论('+ item['comments_count']+')</a>' +
-						'<a class="yuanfen" href="javascript:void(0);">缘分轨迹</a>' +
+						'<a class="yuanfen" lat="'+item['geo']['coordinates'][0]+'" long="'+item['geo']['coordinates'][1]+'" href="javascript:void(0);">缘分轨迹</a>' +
 					'</span>' +
 				'</div>' +
 			'</div>' +

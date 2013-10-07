@@ -1,13 +1,22 @@
 var line = new Array();
 
-function initmap(coordinates){
+function initmap(coordinates, type){
   	var mapOptions = {
           center: new google.maps.LatLng(coordinates[0], coordinates[1]),
           zoom: 12,
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
 
-    var map = new google.maps.Map(document.getElementById("map_canvas_mid"), mapOptions);
+    var id;
+    if(type == 'lef'){
+      id = "map_canvas_lef";
+    }else if(type == 'mid'){
+      id = "map_canvas_mid";
+    }else if(type == 'rig'){
+      id = "map_canvas_rig";
+    }
+    
+    var map = new google.maps.Map(document.getElementById(id), mapOptions);
     return map;
 }
 

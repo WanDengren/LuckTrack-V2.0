@@ -8,7 +8,7 @@
 	color: #666;	
 }
 #slides{
-	margin-left: -1520px;
+	margin-left: -760px;
 	height: 610px;
 	overflow: hidden;
 	width: 2280px;
@@ -76,14 +76,34 @@ img.arrow-right{
 	margin-right: 20px;
 }
 .friends{
-	height: 56%;
-	overflow: scroll-y;	
+	height: 54%;
 	border-top: 1px solid #ddd;
 	border-bottom: 1px solid #ddd;
 	box-shadow: 0 1px 0 #f2f4f5;	
 	border-radius: 10px;	
 }
+div.friend-list{
+	width: 99%;
+	height: 285px;
+	overflow-x: hidden;
+	overflow-y: scroll;
+}
 .error{
 	text-align: center;
 	color: #ff1a66;
+}
+a.friends-up{
+	display: block;
+	margin-left: 10px;
+	margin-right: 20px;
+	border: 1px solid #ddd;
+	cursor: pointer;
+	background-color: #e5ebe4;
+}
+a.friends-up:hover{
+	background-color: #EBFCE8;
+}
+img.arrow_up, img.arrow_down{
+	display: block;
+	margin: auto;
 }

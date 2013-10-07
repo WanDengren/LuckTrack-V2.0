@@ -378,6 +378,7 @@ $config['sea_output_cache'] = '';
  */
 $config['sea_captcha_cache'] = '';
 
+/*以下添加你的新浪微博站内应用配置信息*/
 $config['WB_AKEY'] = '1404805039';
 $config['WB_SKEY'] = '3bfb3132a0a45d90786f68ae4a10de76'; 
 $config['CANVAS_PAGE'] = "http://apps.weibo.com/lengyeyoulan";

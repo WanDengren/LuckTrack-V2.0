@@ -39,18 +39,16 @@ class Welcome extends CI_Controller {
 
 		//判断用户是否授权
 		$oauth2 = $this->session->userdata('oauth2');
-		if (empty($oauth2)) {
-			//include "auth.php";
-			exit;
+		if (!isset($oauth2['user_id'])) {
+			$this->load->view('auth');
+			return;
 		}else{
 			$c = new $this->Saetclientv2();
 			$c->init($this->config->item('WB_AKEY'),
 						$this->config->item('WB_SKEY'),
 						$oauth2['oauth_token'],
 						'');
-		} 
-
-		$data['oauth2'] = $oauth2;
+		}
 
 		$this->load->view('home');
 	}
@@ -58,30 +56,22 @@ class Welcome extends CI_Controller {
 	public function user(){
 		$data = json_decode($this->input->post('data'), TRUE);
 
-		$oauth2 = $this->session->userdata('oauth2');
-		$usr_feed = $this->Saeapi->place_user_timeline($oauth2['user_id'], $data['count'], $data['page']);
+		$usr_feed = $this->Saeapi->place_user_timeline($data['uid'], $data['count'], $data['page']);
 		echo $usr_feed;
 	}
 
 	public function friends(){
-		$count = json_decode($this->input->post('data'), TRUE);
+		$data = json_decode($this->input->post('data'), TRUE);
 
 		$oauth2 = $this->session->userdata('oauth2');
-		$friends = $this->Saeapi->friendships_fridens($oauth2['user_id'], $count);
-
-		$friends = json_decode($friends, TRUE);
-		$friends['users'] = array();
-
-		foreach ($friends['ids'] as $item) {
-			$info = $this->Saeapi->users_show($item);
-			array_push($friends['users'], json_decode($info, TRUE));
-		}
-
-		echo json_encode($friends);
+		$friends = $this->Saeapi->friendships_fridens($oauth2['user_id'], $data['count'], $data['cursor']);
+		echo $friends;
 	}
 
 	public function nearby(){
-
+		$data = json_decode($this->input->post('data'), TRUE);
+		$nearby = $this->Saeapi->place_nearby_timeline($data['lat'], $data['long']);
+		echo $nearby;
 	}
 }
 

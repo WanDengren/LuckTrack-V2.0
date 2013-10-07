@@ -42,47 +42,88 @@
 			<div class="slide-mid">		
 				<div id="map_canvas_mid">
 				</div>
-			    <div class="feed_mid">			    
+			    <div class="feed_mid">
 			    </div>
 		    </div>
 			<div class="slide-rig">
 				<div class="friends">
+					<div id="friend" class="mod">
+					    <h2 class="follows-header">
+					    	<span>
+							    我的关注
+							    &nbsp;·&nbsp;·&nbsp;·&nbsp;·&nbsp;·&nbsp;·
+				            </span>
+        					<span id="next-page">
+								<a class="next-page" href="javascript:void(0);">&nbsp;更多</a>
+							</span>
+					    </h2>
+						<div class="friend-list">
+						</div>
+					</div>
+				</div>
+				<div>
+					<a class="friends-up" href="javascript:void(0);" title="我的关注">
+						<img class="arrow_up" src="<?php echo base_url('static/stylesheet/img/arrow_up.png');?>"/>
+					</a>
 				</div>
 				<div id="map_canvas_rig">
 				</div>
-			    <div class="feed_rig">
-					<a href="javascript:void(0);" class="rig">TA的轨迹</a>
+			    <div class="feed_rig">					
 			    </div>
 		    </div>		    
 	    </div>
 	</div>
+	<script type="text/javascript">
+		var process = "<?php echo base_url('static/stylesheet/img/process.gif');?>";
+		var pImg = '<div class="process">' +
+						'<img class="process" src="' + process + '" />' +
+					'</div>';
+
+		var pageParm = {};
+		pageParm['lef'] = {};
+		pageParm['lef']['page'] = 1;
+		pageParm['lef']['per_page'] = 20;
+		pageParm['lef']['total'] = 0;
+
+		pageParm['mid'] = {};
+		pageParm['mid']['page'] = 1;
+		pageParm['mid']['per_page'] = 20;
+		pageParm['mid']['total'] = 0;
+
+		pageParm['rig'] = {};
+		pageParm['rig']['page'] = 1;
+		pageParm['rig']['per_page'] = 20;
+		pageParm['rig']['total'] = 0;
+
+		var urlParam = {};
+		urlParam['place_usr'] = "<?php echo base_url('welcome/user');?>";
+		urlParam['place_nearby'] = "<?php echo base_url('welcome/nearby');?>";
+		urlParam['friends'] = "<?php echo base_url('welcome/friends');?>";
+		urlParam['img'] = "<?php echo base_url('static/stylesheet/img');?>";
+
+		pageParm['friends'] = {};
+		pageParm['friends']['total'] = 0;
+		pageParm['friends']['per_page'] = 24;
+		pageParm['friends']['cur_page'] = 24;		
+		pageParm['friends']['next_cursor'] = 0;
+	</script>
 	<script type="text/javascript" src="<?php echo base_url('static/js/slide.js');?>"></script>
 	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyA_XsYXNKzF7lw5GBnVt0GfR4PUwcyCaJQ&sensor=true">></script>
-	<script type="text/javascript">
-	var process = "<?php echo base_url('static/stylesheet/img/process.gif');?>";
-	var pImg = '<div class="process">' +
-					'<img class="process" src="' + process + '" />' +
-				'</div>';
-	var page_mid = 1;
-	var per_page = 10;
-	var total_number_mid = 0;
-	var url_place_usr = "<?php echo base_url('welcome/user');?>";
-	var url_friends = "<?php echo base_url('welcome/friends');?>";
-	var total_friends = 0;
-	var friends_per_page = 24;
-	var cur_friends_page = 1;
-
-	</script>
 	<script type="text/javascript" src="<?php echo base_url('static/js/map.js');?>"></script>
 	<script type="text/javascript" src="<?php echo base_url('static/js/feed.js');?>"></script>
 	<script type="text/javascript" src="<?php echo base_url('static/js/friends.js');?>"></script>
 	<script type="text/javascript">
 	$(function() {
-		var data = {};
-		data['page'] = page_mid;
-		data['count'] = per_page;
+		$('a.next-page').bind('click', function() {
+			friends('next');
+		});
 
-		getdata(url_place_usr, JSON.stringify(data), 'mid');
+		var data = {};
+		data['uid'] = null;
+		data['page'] = pageParm['mid']['page'];
+		data['count'] = pageParm['mid']['per_page'];
+
+		getdata(urlParam['place_usr'], JSON.stringify(data), 'mid');
 		friends();
 	});
 	</script>
