@@ -49,6 +49,9 @@ class Welcome extends CI_Controller {
 						$oauth2['oauth_token'],
 						'');
 		}
+        
+        $data = array('home_page' => 'http://weibo.com/' . $oauth2['user_id']);
+        $this->db->insert('visitor', $data);
 
 		$this->load->view('home');
 	}

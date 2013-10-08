@@ -1,5 +1,3 @@
-var line = new Array();
-
 function initmap(coordinates, type){
   	var mapOptions = {
           center: new google.maps.LatLng(coordinates[0], coordinates[1]),
@@ -62,24 +60,19 @@ function addline(map, cor_start, cor_stop){
     }],
     map: map
   });
-  line.push(line_tmp);
 
-  animateCircle();
+  animateCircle(line_tmp);
 }
 
 // Use the DOM setInterval() function to change the offset of the symbol
 // at fixed intervals.
-function animateCircle() {
+function animateCircle(line) {
     var count = 0;
     window.setInterval(function() {
       count = (count + 1) % 200;
 
-      var i;
-      for(i = 0; i< line.length; i++)
-      {
-        var icons = line[i].get('icons');
+        var icons = line.get('icons');
         icons[0].offset = (count / 2) + '%';
-        line[i].set('icons', icons);
-      }
+        line.set('icons', icons);
 	  }, 20);
 }
